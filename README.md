@@ -12,7 +12,9 @@ Note:- Github project folder wont have node modules on contrast to your local pr
 1. Pull origin and commit to main
 2. Copy the server folder to your local project
 3. Open terminal and run <br> 
-'''npm install
+'''
+npm install
+'''
 
 4. Node Modules will be added
 
