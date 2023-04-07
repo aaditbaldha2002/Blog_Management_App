@@ -37,6 +37,7 @@ const Navbar = () => {
   const oldposts=posts;
   const user = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
+  const navbardisplay= useMediaQuery("(min-width: 200px");
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   
   const theme = useTheme();
@@ -82,7 +83,7 @@ const Navbar = () => {
         >
           Blog Management
         </Typography>
-        {isNonMobileScreens && (
+        {navbardisplay && (
           <FlexBetween
             backgroundColor={neutralLight}
             borderRadius="9px"
