@@ -1,22 +1,30 @@
 import sys
+import pymongo
+from bson.objectid import ObjectId
 import ast
 import pandas as pd
 import numpy as np
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import matplotlib.pyplot as plt
-#hugging face - sentiment
-#BERT - Topic Modelling
 
-#for data conversion from json to readable in python
-posts=sys.argv
-dict_obj=ast.literal_eval(posts[1])
+postIdString=sys.argv[1]
+postId=ast.literal_eval(postIdString)
+
+#for connection to mongodb
+connString="mongodb+srv://aadit:1234@blog-management-db.9g0czhk.mongodb.net/test"
+client=pymongo.MongoClient(connString)
+db=client['test_aadit'] 
+
+post=db.posts.find_one({"_id":ObjectId(postId)})
+
+# print(type(sys.argv[1]))
+# dict_obj=ast.literal_eval(post[1])
 commentsList=[]
 commentsList=np.array(commentsList)
 ind=0
-for values in dict_obj.values():
-    for i in values['comments']:
-        commentsList=np.append(commentsList,i)
+for values in post['comments']:
+    commentsList=np.append(commentsList,values['comment'])
 
 ###########################################################################################
 sid=SentimentIntensityAnalyzer() #responsible for giving sentiment scores to each post
@@ -26,7 +34,7 @@ for i in commentsList: #needs changes
     score=sid.polarity_scores(i)
     sentiment_scores.append(score)
 
-dict_to_send={}
+# dict_to_send={}
 # dict_to_send["sentiment_scores"]=sentiment_scores #needs changes
 
 
@@ -46,21 +54,11 @@ for s in sentiment_scores:
         label.append('Neutral')
         neutralCount+=1
 
-dict_to_send["sentiment_labels"]=label #needs changes
+# print(label)
 
-totalCount=postiveCount+negativeCount+neutralCount #total no. of posts
-dict_to_send["totalComments"]=totalCount
-dict_to_send["postiveComments"]=postiveCount
-dict_to_send["negaticeComments"]=negativeCount
-dict_to_send["neutralComments"]=neutralCount
-
-labelSeries=pd.Series(label)
-sentiment_counts=labelSeries.value_counts() #needs changes
-
-print(dict_to_send)
-
-plt.pie(sentiment_counts,labels=sentiment_counts.index,autopct='%1.1f%%')
-plt.title("Sentiment Distribution")
-
-plt.savefig("D://Sem VI//Projects//SDP//Blog_Management_App-main-Aadit//BLOG_MANAGEMENT_TEST_AADIT//client//public//assets//pieChart.png")
-plt.show()
+if neutralCount>=negativeCount and neutralCount>=postiveCount:
+    print("neutral")
+elif negativeCount>=postiveCount and negativeCount>=neutralCount:
+    print("negative")
+else:
+    print("positive")
