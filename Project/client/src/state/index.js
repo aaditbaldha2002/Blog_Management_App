@@ -5,6 +5,8 @@ const initialState = {
   user: null,
   token: null,
   posts: [],
+  viewPart:"Posts",
+  side:null,
 };
 
 export const authSlice = createSlice({
@@ -17,10 +19,12 @@ export const authSlice = createSlice({
     setLogin: (state, action) => {
       state.user = action.payload.user;
       state.token = action.payload.token;
+      state.side=action.payload.side;
     },
     setLogout: (state) => {
       state.user = null;
       state.token = null;
+      state.side=null;
     },
     setFriends: (state, action) => {
       if (state.user) {
@@ -42,6 +46,28 @@ export const authSlice = createSlice({
   },
 });
 
+export const adminSlice= createSlice({
+  name:"admin",
+  initialState,
+  reducers:{
+
+    setUserView:(state)=>{
+      state.viewPart="Users";
+    },
+
+    setPostsView:(state)=>{
+      state.viewPart="Posts";
+    },
+
+    setPostAnalyticsView:(state)=>{
+      state.viewPart="PostsAnalytics";
+    },
+
+  }
+});
+
 export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost } =
   authSlice.actions;
-export default authSlice.reducer;
+export const {setUserView, setPostsView,setPostAnalyticsView }=adminSlice.actions;
+export const authReducer=authSlice.reducer;
+export const adminReducer=adminSlice.reducer;
