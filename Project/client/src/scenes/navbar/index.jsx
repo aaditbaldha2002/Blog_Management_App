@@ -32,15 +32,12 @@ const Navbar = () => {
   const [search, setsearch] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
   const posts = useSelector((state) => state.posts);
-  const oldposts=posts;
   const user = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
-  const navbardisplay= useMediaQuery("(min-width: 200px");
-
+  const whichSide=useSelector((state)=>state.side);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
-  
+
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
   const dark = theme.palette.neutral.dark;
@@ -50,12 +47,8 @@ const Navbar = () => {
 
   const fullName = `${user.firstName} ${user.lastName}`;
 
-
-
-
   const searchbox = async () => {
-
-    if (search != "") {
+    if (search !=="" && search!==" ") {
       const response = await fetch(`${process.env.REACT_APP_IP}/posts/${search}`, {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
@@ -63,9 +56,20 @@ const Navbar = () => {
       const data = await response.json();
       dispatch(setPosts({ posts: data }));
       console.log(posts)
+    }
 
+    else
+    {
+      const response=await fetch(`${process.env.REACT_APP_IP}/posts`,{
+        method:"GET",
+        headers:{Authorization:`Bearer ${token}`},
+      });
+      const data=await response.json();
+      dispatch(setPosts({posts:data}));
+      console.log(posts);
     }
   };
+
 
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt}>
@@ -74,7 +78,15 @@ const Navbar = () => {
           fontWeight="bold"
           fontSize="clamp(1rem, 2rem, 2.25rem)"
           // color="primary"
-          onClick={() => navigate(`/home`)}
+          onClick={() => {
+            console.log(whichSide);
+            if(whichSide=="admin")
+            {
+              navigate("/admin");
+            }
+            else
+              navigate("/home");
+          }}
           sx={{
             "&:hover": {
               // color: primaryLight,
@@ -84,7 +96,7 @@ const Navbar = () => {
         >
           Blog Management
         </Typography>
-        {navbardisplay && (
+        {isNonMobileScreens && (
           <FlexBetween
             backgroundColor={neutralLight}
             borderRadius="9px"
@@ -113,9 +125,9 @@ const Navbar = () => {
               <LightMode sx={{ color: dark, fontSize: "25px" }} />
             )}
           </IconButton>
-          {/* <Message sx={{ fontSize: "25px" }} />
+          <Message sx={{ fontSize: "25px" }} />
           <Notifications sx={{ fontSize: "25px" }} />
-          <Help sx={{ fontSize: "25px" }} /> */}
+          <Help sx={{ fontSize: "25px" }} />
           <FormControl variant="standard" value={fullName}>
             <Select
               value={fullName}
@@ -161,7 +173,6 @@ const Navbar = () => {
           minWidth="300px"
           backgroundColor={background}
         >
-
           {/* CLOSE ICON */}
           <Box display="flex" justifyContent="flex-end" p="1rem">
             <IconButton
@@ -189,9 +200,9 @@ const Navbar = () => {
                 <LightMode sx={{ color: dark, fontSize: "25px" }} />
               )}
             </IconButton>
-            {/* <Message sx={{ fontSize: "25px" }} /> */}
-            {/* <Notifications sx={{ fontSize: "25px" }} />
-            <Help sx={{ fontSize: "25px" }} /> */}
+            <Message sx={{ fontSize: "25px" }} />
+            <Notifications sx={{ fontSize: "25px" }} />
+            <Help sx={{ fontSize: "25px" }} />
             <FormControl variant="standard" value={fullName}>
               <Select
                 value={fullName}
@@ -219,7 +230,6 @@ const Navbar = () => {
               </Select>
             </FormControl>
           </FlexBetween>
-
         </Box>
       )}
     </FlexBetween>
