@@ -1,35 +1,37 @@
-import { useState } from "react";
-import { setPosts } from "state/index";
+import { PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material";
+import SentimentSatisfiedSharpIcon from '@mui/icons-material/SentimentSatisfiedSharp';
+import SentimentNeutralOutlinedIcon from '@mui/icons-material/SentimentNeutralOutlined';
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material";
-import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Box, IconButton, Typography, useTheme,Button } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setFriends } from "state/index";
+import { setPosts } from "state/index";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
+import { useState } from "react";
 
-const Friend = ({call, postId, friendId, name, subtitle, userPicturePath }) => {
+const Friend = ({call, postId, friendId, name, subtitle, userPicturePath, isAdminSide }) => {
   const dispatch = useDispatch();
-  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const { _id } = useSelector((state) => state.user);
-  const loggedInUserId = useSelector((state) => state.user._id);
   const posts = useSelector((state) => state.posts);
   const token = useSelector((state) => state.token);
   const friends = useSelector((state) => state.user.friends);
-
+  const [open, setOpen] = useState(false);
+  const [response,setResponse]=useState("null");
   const { palette } = useTheme();
+  const loggedInUserId = useSelector((state) => state.user._id);
   const primaryLight = palette.primary.light;
   const primaryDark = palette.primary.dark;
   const main = palette.neutral.main;
   const medium = palette.neutral.medium;
-
   const isFriend = friends.find((friend) => friend._id === friendId);
 
   const OpendeleteModal = () => {
@@ -60,6 +62,26 @@ const Friend = ({call, postId, friendId, name, subtitle, userPicturePath }) => {
 
   }
 
+const analysePost=async()=>{
+    let postStat=await fetch(
+      `${process.env.REACT_APP_IP}/admin/${postId}/analysis`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    ).then((response)=>response.json())
+     .then((data)=>{
+      console.log(data);
+      setResponse(data.msg.replaceAll("\r\n",""));
+    }).catch((err)=>{
+      console.log(err);
+    });  
+  };
+  
+  
   const patchFriend = async () => {
     const response = await fetch(
       `${process.env.REACT_APP_IP}/users/${_id}/${friendId}`,
@@ -103,6 +125,20 @@ const Friend = ({call, postId, friendId, name, subtitle, userPicturePath }) => {
           </Typography>
         </Box>
       </FlexBetween>
+
+      {/*sentiment analysis button */}
+      {(isAdminSide==="true") && <Button onClick={analysePost} variant="contained">Analyse Post</Button>}
+      
+      {/* for positive icon */}
+      {(isAdminSide==="true" && response==="positive") && <SentimentSatisfiedSharpIcon />}
+
+      {/* for negative icon */}
+      {(isAdminSide==="true" && response==="negative") && <SentimentVeryDissatisfiedIcon/>}
+
+      {/* for neutral icon */}
+      {(isAdminSide==="true" && response==="neutral") && <SentimentNeutralOutlinedIcon/>}
+
+
       <FlexBetween gap="1rem">
         {call=="PostWidget" && loggedInUserId == friendId && (<IconButton aria-label="delete">
            <DeleteIcon onClick={OpendeleteModal} />
