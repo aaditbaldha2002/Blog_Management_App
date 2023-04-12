@@ -79,10 +79,10 @@ const Form = () => {
     }
   };
 
-
   const login = async (values, onSubmitProps) => {
-
-    if (values.email == "admin@gmail.com" && values.password == "admin1234") {
+    
+    if(values.email=="admin@gmail.com" && values.password=="admin1234")
+    {
       const loggedInResponse = await fetch(`${process.env.REACT_APP_IP}/auth/adminLogin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -97,31 +97,33 @@ const Form = () => {
           setLogin({
             user: loggedIn.user,
             token: loggedIn.token,
+            side:"admin",
           })
         );
         navigate("/admin");
-      }
+      }    
     }
 
-    else {
-      const loggedInResponse = await fetch(`${process.env.REACT_APP_IP}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
-      console.log(loggedInResponse);
-      const loggedIn = await loggedInResponse.json();
-      // console.log(loggedIn);
-      onSubmitProps.resetForm();
-      if (loggedIn) {
-        dispatch(
-          setLogin({
-            user: loggedIn.user,
-            token: loggedIn.token,
-          })
-        );
-        navigate("/home");
-      }
+    else{
+        const loggedInResponse = await fetch(`${process.env.REACT_APP_IP}/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
+        });
+        console.log(loggedInResponse);
+        const loggedIn = await loggedInResponse.json();
+        // console.log(loggedIn);
+        onSubmitProps.resetForm();
+        if (loggedIn) {
+          dispatch(
+            setLogin({
+              user: loggedIn.user,
+              token: loggedIn.token,
+              side:"user",
+            })
+          );
+          navigate("/home");
+        }
     }
   };
 
