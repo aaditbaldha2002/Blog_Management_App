@@ -14,7 +14,7 @@ postId=ast.literal_eval(postIdString)
 #for connection to mongodb
 connString="mongodb+srv://aadit:1234@blog-management-db.9g0czhk.mongodb.net/test"
 client=pymongo.MongoClient(connString)
-db=client['test_aadit'] 
+db=client['test_ruchit'] 
 
 post=db.posts.find_one({"_id":ObjectId(postId)})
 

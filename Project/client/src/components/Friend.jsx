@@ -171,7 +171,7 @@ const analysePost=async()=>{
           onClick={() => patchFriend()}
           sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
         >
-          {isFriend ? (
+          {isFriend? (
             <PersonRemoveOutlined sx={{ color: primaryDark }} />
           ) : (
             <PersonAddOutlined sx={{ color: primaryDark }} />
