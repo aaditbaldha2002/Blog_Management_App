@@ -26,6 +26,7 @@ const PostWidget = ({
   userPicturePath,
   likes,
   comments,
+  isadminPost,
 }) => {
   const [showComments, ToggleComments] = useState(false);
   const [comment, setComment] = useState("");
@@ -105,6 +106,8 @@ const PostWidget = ({
         name={name}
         subtitle={location}
         userPicturePath={userPicturePath}
+        isAdminSide={isadminPost}
+        call="PostWidget"
       />
       <Typography color={main} sx={{ mt: "1rem" }}>
         {description}
