@@ -167,7 +167,7 @@ const analysePost=async()=>{
 
 
         </IconButton>)}
-        <IconButton
+        {call=="PostWidget" && loggedInUserId != friendId && (<IconButton
           onClick={() => patchFriend()}
           sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
         >
@@ -176,8 +176,7 @@ const analysePost=async()=>{
           ) : (
             <PersonAddOutlined sx={{ color: primaryDark }} />
           )}
-        </IconButton>
-
+        </IconButton>)}
       </FlexBetween>
     </FlexBetween>
   );
