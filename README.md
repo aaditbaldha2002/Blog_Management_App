@@ -23,7 +23,19 @@ cd ..
 cd server
 npm install --force --legacy-peers-deps
 ```
-
+4.Now close your current terminal and open two new terminals and run one terminal with the following commands:
+```
+cd <path to the 'Project' folder>
+cd client
+npm start
+```
+and another with these commands
+```
+cd <path to the 'Project' folder>
+cd server
+node index.js
+```
+5.The client runs on localhost port number 3000 and the server is using localhost port:3001
 
 # Commit
 On Commiting copy everything except node modules and paste in Github Project repo
