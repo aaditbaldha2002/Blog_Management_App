@@ -296,7 +296,7 @@ const Form = () => {
 
           {/* BUTTONS */}
           <Box>
-             {isInvalidLogin?
+             {isInvalidLogin && isLogin ?
               <Typography sx={{
                 color: "red",
                 textAlign:"center",
