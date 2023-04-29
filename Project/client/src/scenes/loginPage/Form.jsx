@@ -55,6 +55,7 @@ const Form = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
+  const [isInvalidLogin,setIsInvalidLogin]=useState(false);
 
   const register = async (values, onSubmitProps) => {
     // this allows us to send form info with image
@@ -109,10 +110,17 @@ const Form = () => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(values),
+        }).then((response)=>response.json()).then((data)=>{
+          let dataArr=Object.values(data);
+          if(dataArr[0]=="Invalid credentials. ")
+          {
+            setIsInvalidLogin(true);
+            console.log(isInvalidLogin);
+          }
         });
-        console.log(loggedInResponse);
-        const loggedIn = await loggedInResponse.json();
-        // console.log(loggedIn);
+        // console.log("inside else:"+loggedInResponse);
+        const loggedIn =loggedInResponse;
+        console.log("inside else (loggedIn var):"+loggedIn);
         onSubmitProps.resetForm();
         if (loggedIn) {
           dispatch(
@@ -125,6 +133,7 @@ const Form = () => {
           navigate("/home");
         }
     }
+
   };
 
   // const login = async (values, onSubmitProps) => {
@@ -287,6 +296,15 @@ const Form = () => {
 
           {/* BUTTONS */}
           <Box>
+             {isInvalidLogin?
+              <Typography sx={{
+                color: "red",
+                textAlign:"center",
+                paddingY:3,
+              }}>
+                Username or Password is incorrect
+              </Typography>:<></>}
+
             <Button
               fullWidth
               type="submit"
