@@ -4,7 +4,7 @@ import { setPosts } from "state/index";
 import PostWidget from "./PostWidget";
 
 
-const PostsWidget = ({ userId, isProfile = false ,isAdminSide}) => {
+const PostsWidget = ({ userId, isProfile = false, isAdminSide }) => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts);
   const token = useSelector((state) => state.token);
@@ -67,6 +67,7 @@ const PostsWidget = ({ userId, isProfile = false ,isAdminSide}) => {
               userPicturePath={userPicturePath}
               likes={likes}
               comments={comments}
+              isProfile={isProfile}
               isAdminPost={isAdminSide}
             />
           )
