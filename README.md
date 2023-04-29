@@ -11,7 +11,7 @@ Note:- Github project folder wont have node modules on contrast to your local pr
 # How to Run
 1. Download the zip file of the project
 2. Extract the zip file to your desired local folder
-3. Open terminal and run cd <real path of your local folder><br> 
+3. Open terminal and run cd real path of your local folder<br> 
 ```
 cd Project
 cd client
