@@ -106,34 +106,33 @@ const Form = () => {
     }
 
     else{
-        const loggedInResponse = await fetch(`${process.env.REACT_APP_IP}/auth/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(values),
-        }).then((response)=>response.json()).then((data)=>{
-          let dataArr=Object.values(data);
-          if(dataArr[0]=="Invalid credentials. ")
-          {
-            setIsInvalidLogin(true);
-            console.log(isInvalidLogin);
-          }
-        });
-        // console.log("inside else:"+loggedInResponse);
-        const loggedIn =loggedInResponse;
-        console.log("inside else (loggedIn var):"+loggedIn);
-        onSubmitProps.resetForm();
-        if (loggedIn) {
-          dispatch(
-            setLogin({
-              user: loggedIn.user,
-              token: loggedIn.token,
-              side:"user",
-            })
-          );
-          navigate("/home");
-        }
-    }
+      const loggedInResponse = await fetch(`${process.env.REACT_APP_IP}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      }).then((response)=>response.json());
+      
+      let loggedIn=loggedInResponse;
+      console.log(loggedIn);
+      onSubmitProps.resetForm();
+        
+      if (loggedIn.user) {
+        setIsInvalidLogin(false);
+        dispatch(
+          setLogin({
+            user: loggedIn.user,
+            token: loggedIn.token,
+            side:"user",
+          })
+        );
+        navigate("/home");
+      }
 
+      else if(loggedIn.msg=="Invalid credentials. ")
+      {
+        setIsInvalidLogin(true);
+      }
+    }
   };
 
   // const login = async (values, onSubmitProps) => {
