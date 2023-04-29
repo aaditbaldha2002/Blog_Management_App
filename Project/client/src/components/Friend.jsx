@@ -17,7 +17,7 @@ import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 import { useState } from "react";
 
-const Friend = ({call, postId, friendId, name, subtitle, userPicturePath, isAdminSide }) => {
+const Friend = ({call, postId, friendId, name, subtitle, userPicturePath, isProfile=false, isAdminSide }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { _id } = useSelector((state) => state.user);
@@ -167,7 +167,7 @@ const analysePost=async()=>{
 
 
         </IconButton>)}
-        {call=="PostWidget" && loggedInUserId != friendId && (<IconButton
+        {call=="PostWidget" && loggedInUserId != friendId && isProfile==false && (<IconButton
           onClick={() => patchFriend()}
           sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
         >
@@ -177,6 +177,7 @@ const analysePost=async()=>{
             <PersonAddOutlined sx={{ color: primaryDark }} />
           )}
         </IconButton>)}
+
       </FlexBetween>
     </FlexBetween>
   );
