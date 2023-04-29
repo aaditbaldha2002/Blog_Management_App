@@ -9,14 +9,21 @@ Note:- Github project folder wont have node modules on contrast to your local pr
 
 
 # How to Run
-1. Pull origin and commit to main
-2. Copy the server folder to your local project
-3. Open terminal and run <br> 
+1. Download the zip file of the project
+2. Extract the zip file to your desired local folder
+3. Open terminal and run cd <real path of your local folder><br> 
 ```
+cd Project
+cd client
 npm install
 ```
+let the npm do its thing then run the below commands in terminal
+```
+cd ..
+cd server
+npm install --force --legacy-peers-deps
+```
 
-4. Node Modules will be added
 
 # Commit
 On Commiting copy everything except node modules and paste in Github Project repo
