@@ -128,7 +128,7 @@ const Form = () => {
         navigate("/home");
       }
 
-      else if(loggedIn.msg=="Invalid credentials. ")
+      else
       {
         setIsInvalidLogin(true);
       }
@@ -301,7 +301,7 @@ const Form = () => {
                 textAlign:"center",
                 paddingY:3,
               }}>
-                Username or Password is incorrect
+                Email or Password is incorrect
               </Typography>:<></>}
 
             <Button
