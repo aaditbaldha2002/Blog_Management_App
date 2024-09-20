@@ -1,2 +1,1 @@
-./client/node_modules #obviously
-./server/node_modules #obviously
+node_modules/ #obviously
