@@ -26,6 +26,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state/index";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
+import styled from "styled-components";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -34,6 +35,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const posts = useSelector((state) => state.posts);
   const user = useSelector((state) => state.user);
+  const picturePath = user.picturePath;
   const token = useSelector((state) => state.token);
   const whichSide=useSelector((state)=>state.side);
   
@@ -83,7 +85,7 @@ const Navbar = () => {
           // color="primary"
           onClick={() => {
             console.log(whichSide);
-            if(whichSide=="admin")
+            if(whichSide==="admin")
             {
               navigate("/admin");
             }
@@ -155,6 +157,8 @@ const Navbar = () => {
               <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
             </Select>
           </FormControl>
+          <ProfileIcon src={`${process.env.REACT_APP_IP}/assets/${picturePath}`}/>
+
         </FlexBetween>
       ) : (
         <IconButton
@@ -232,11 +236,23 @@ const Navbar = () => {
                 </MenuItem>
               </Select>
             </FormControl>
+            
+            <ProfileIcon src={`${process.env.REACT_APP_IP}/assets/${picturePath}`} size="30px" alt="Error"/>
+            
+
           </FlexBetween>
         </Box>
       )}
     </FlexBetween>
   );
 };
+
+const ProfileIcon = styled.img`
+  border-radius:50%;
+  width: 60px;
+  height: 60px;
+  cursor:pointer;
+  object-fit: cover;
+`;
 
 export default Navbar;

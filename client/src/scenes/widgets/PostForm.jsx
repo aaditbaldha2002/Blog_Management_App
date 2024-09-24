@@ -16,6 +16,7 @@ import {
   Button,
   IconButton,
   useMediaQuery,
+  ButtonBase,
 } from "@mui/material";
 
 import FlexBetween from "components/FlexBetween";
@@ -25,7 +26,8 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state/index";
-
+import styled from "styled-components";
+import { themeSettings } from "theme";
 const MyPostWidget = ({ picturePath }) => {
   const dispatch = useDispatch();
   const [isImage, setIsImage] = useState(false);
@@ -60,6 +62,7 @@ const MyPostWidget = ({ picturePath }) => {
 
   return (
     <WidgetWrapper>
+      <WidgetTitle>Post Something</WidgetTitle>
       <FlexBetween gap="1.5rem">
         <UserImage image={picturePath} />
         <InputBase
@@ -166,9 +169,27 @@ const MyPostWidget = ({ picturePath }) => {
         >
           POST
         </Button>
+
+        <PostBtn disabled={!post} onClick={handlePost}>
+          POST
+        </PostBtn>
+
       </FlexBetween>
     </WidgetWrapper>
   );
 };
 
 export default MyPostWidget;
+
+const WidgetTitle = styled.div`
+  font-family: 'Rubik', sans-serif;
+  font-size: 20px;
+  color: ${themeSettings().palette.background.default};
+  margin-bottom: 1rem;
+`;
+
+const PostBtn = styled(Button)`
+  color: ${themeSettings().palette.background.alt};
+  background-color: ${themeSettings().palette.primary.dark};
+  border-radius: "3rem";
+`;
