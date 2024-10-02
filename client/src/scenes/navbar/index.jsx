@@ -26,13 +26,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state/index";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
+import { usePosts } from "../../context";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
   const [search, setsearch] = useState("");
   const dispatch = useDispatch();
+  const { posts , dispatch:postsDispatch } = usePosts();
   const navigate = useNavigate();
-  const posts = useSelector((state) => state.posts);
   const user = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
   const whichSide=useSelector((state)=>state.side);
@@ -51,26 +52,38 @@ const Navbar = () => {
   const fullName = `${user.firstName} ${user.lastName}`;
 
   const searchbox = async () => {
+
+    /*TEMPORARILY SWITCHING OFF THE SEARCH FUNCTIONALITY AS NOW IT REQUIRES ADDITIONAL HANDLING OF INFINITE SCROLL
     if (search !=="" && search!==" ") {
-      const response = await fetch(`${process.env.REACT_APP_IP}/posts/${search}`, {
+      const response = await fetch(`${process.env.REACT_APP_IP}/posts/search/${search}`, {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });
+      
+      
       const data = await response.json();
-      dispatch(setPosts({ posts: data }));
+      postsDispatch({
+        type: "SET_POSTS",
+        payload: (data),
+      });
+      //dispatch(setPosts({ posts: data }));
       console.log(posts)
+      
     }
 
     else
-    {
-      const response=await fetch(`${process.env.REACT_APP_IP}/posts`,{
+    { 
+      const response=await fetch(`${process.env.REACT_APP_IP}/posts?page=1`,{
         method:"GET",
         headers:{Authorization:`Bearer ${token}`},
       });
       const data=await response.json();
-      dispatch(setPosts({posts:data}));
+      postsDispatch({
+        type: "SET_POSTS",
+        payload: (data),
+      });
       console.log(posts);
-    }
+    }*/
   };
 
 
@@ -82,7 +95,6 @@ const Navbar = () => {
           fontSize="clamp(1rem, 2rem, 2.25rem)"
           // color="primary"
           onClick={() => {
-            console.log(whichSide);
             if(whichSide=="admin")
             {
               navigate("/admin");

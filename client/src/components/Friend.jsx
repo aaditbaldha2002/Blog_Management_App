@@ -16,12 +16,13 @@ import { setPosts } from "state/index";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 import { useState } from "react";
+import { usePosts } from "../context";
 
 const Friend = ({call, postId, friendId, name, subtitle, userPicturePath, isProfile=false, isAdminSide }) => {
   const dispatch = useDispatch();
+  const { dispatch:postsDispatch } = usePosts();
   const navigate = useNavigate();
   const { _id } = useSelector((state) => state.user);
-  const posts = useSelector((state) => state.posts);
   const token = useSelector((state) => state.token);
   const friends = useSelector((state) => state.user.friends);
   const [open, setOpen] = useState(false);
@@ -53,13 +54,11 @@ const Friend = ({call, postId, friendId, name, subtitle, userPicturePath, isProf
         },
       }
     );
-    const newposts= posts.filter(post => post._id !== postId);
-    console.log(newposts)
     ClosedeleteModal();
-    dispatch(setPosts({posts:newposts}));
-    
-
-
+    postsDispatch({
+      type: 'DELETE_POST',
+      payload: postId, // The _id of the post you want to delete
+    });
   }
 
 const analysePost=async()=>{
@@ -74,10 +73,8 @@ const analysePost=async()=>{
       }
     ).then((response)=>response.json())
      .then((data)=>{
-      console.log(data);
       setResponse(data.msg.replaceAll("\r\n",""));
     }).catch((err)=>{
-      console.log(err);
     });  
   };
   

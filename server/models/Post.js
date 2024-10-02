@@ -26,10 +26,6 @@ const postSchema = mongoose.Schema(
       type: Map,
       of: String,
     }],
-    // comments: [{
-    //   commentBy: {type: String, required:true},
-    //   comment: {type: String, required:true},
-    // }],
   },
   { timestamps: true }
 );

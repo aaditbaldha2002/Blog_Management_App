@@ -12,9 +12,10 @@ import UserImage from "components/UserImage";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setPost } from "state/index";
+import { useSelector } from "react-redux";
+import { updatePost } from "state/index";
 import { useNavigate } from "react-router-dom";
+import { usePosts } from "../../context";
 
 const PostWidget = ({
   postId,
@@ -31,7 +32,7 @@ const PostWidget = ({
 }) => {
   const [showComments, ToggleComments] = useState(false);
   const [comment, setComment] = useState("");
-  const dispatch = useDispatch();
+  const { dispatch } = usePosts();
   const token = useSelector((state) => state.token);
   const loggedInUserId = useSelector((state) => state.user._id);
   const isLiked = Boolean(likes[loggedInUserId]);
@@ -48,7 +49,6 @@ const PostWidget = ({
   
 
   const patchLike = async () => {
-    // console.log("HEYO");
     const response = await fetch(`${process.env.REACT_APP_IP}/posts/${postId}/like`, {
       method: "PATCH",
       headers: {
@@ -58,17 +58,16 @@ const PostWidget = ({
       body: JSON.stringify({ userId: loggedInUserId }),
     });
     const updatedPost = await response.json();
-    dispatch(setPost({ post: updatedPost }));
+    dispatch({
+      type: "UPDATE_POST",
+      payload: (updatedPost),
+    });
   };
 
   const displayComment = async () => {
 
     ToggleComments(!showComments)
-
-
-
-
-    // dispatch(setFriends({ friends: data }));
+   // dispatch(setFriends({ friends: data }));
 
   }
   const patchComment = async () => {
@@ -79,8 +78,6 @@ const PostWidget = ({
       fullname: fullName,
       picturePath: commentpicturePath,
     };
-    console.log(JSON.stringify(requestbody))
-
     // ToggleComments(!showComments);
     const response = await fetch(`${process.env.REACT_APP_IP}/posts/${postId}/comment`, {
       method: "PATCH",
@@ -91,7 +88,10 @@ const PostWidget = ({
       body: JSON.stringify(requestbody),
     });
     const updatedPost = await response.json();
-    dispatch(setPost({ post: updatedPost }));
+    dispatch({
+      type: "UPDATE_POST",
+      payload: (updatedPost),
+    });
     setComment("");
   };
 
