@@ -89,9 +89,7 @@ const Form = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
-      console.log(loggedInResponse);
       const loggedIn = await loggedInResponse.json();
-      // console.log(loggedIn);
       onSubmitProps.resetForm();
       if (loggedIn) {
         dispatch(
@@ -113,7 +111,6 @@ const Form = () => {
       }).then((response)=>response.json());
       
       let loggedIn=loggedInResponse;
-      console.log(loggedIn);
       onSubmitProps.resetForm();
         
       if (loggedIn.user) {
@@ -134,29 +131,6 @@ const Form = () => {
       }
     }
   };
-
-  // const login = async (values, onSubmitProps) => {
-
-
-  //   const loggedInResponse = await fetch(`${process.env.REACT_APP_IP}/auth/login`, {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify(values),
-  //   });
-  //   console.log(loggedInResponse);
-  //   const loggedIn = await loggedInResponse.json();
-  //   // console.log(loggedIn);
-  //   onSubmitProps.resetForm();
-  //   if (loggedIn) {
-  //     dispatch(
-  //       setLogin({
-  //         user: loggedIn.user,
-  //         token: loggedIn.token,
-  //       })
-  //     );
-  //     navigate("/home");
-  //   }
-  // };
 
   const handleFormSubmit = async (values, onSubmitProps) => {
     if (isLogin) await login(values, onSubmitProps);
