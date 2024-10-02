@@ -113,7 +113,6 @@ const Form = () => {
       }).then((response)=>response.json());
       
       let loggedIn=loggedInResponse;
-      console.log(loggedIn);
       onSubmitProps.resetForm();
         
       if (loggedIn.user) {

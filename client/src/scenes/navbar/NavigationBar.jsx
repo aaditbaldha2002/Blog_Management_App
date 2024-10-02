@@ -6,9 +6,7 @@ import {
   IconButton,
   InputBase,
   Typography,
-  Select,
   MenuItem,
-  FormControl,
   useTheme,
   useMediaQuery,
 } from "@mui/material";
@@ -26,11 +24,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state/index";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
-import styled from "styled-components";
+import {styled,keyframes} from "styled-components";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
   const [search, setsearch] = useState("");
+  const [profileIconDropdownVisibility, setProfileIconDropdownVisibility] = useState(false);
+  const [profileIconDropdownHovered, setProfileIconDropdownHovered] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const posts = useSelector((state) => state.posts);
@@ -38,7 +38,6 @@ const Navbar = () => {
   const picturePath = user.picturePath;
   const token = useSelector((state) => state.token);
   const whichSide=useSelector((state)=>state.side);
-  
   const navbardisplay= useMediaQuery("(min-width: 200px");
   
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
@@ -47,7 +46,6 @@ const Navbar = () => {
   const neutralLight = theme.palette.neutral.light;
   const dark = theme.palette.neutral.dark;
   const background = theme.palette.background.default;
-  const primaryLight = theme.palette.primary.light;
   const alt = theme.palette.background.alt;
 
   const fullName = `${user.firstName} ${user.lastName}`;
@@ -75,6 +73,18 @@ const Navbar = () => {
     }
   };
 
+  const handleDropdownVisibility= ()=>{
+    let currentHoveredState=profileIconDropdownHovered;
+    if(currentHoveredState===true){
+      setProfileIconDropdownHovered(false);
+      setTimeout(()=>{
+        setProfileIconDropdownVisibility(false);
+      },250);
+    }else{
+      setProfileIconDropdownHovered(true);
+      setProfileIconDropdownVisibility(true);
+    }
+  };
 
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt}>
@@ -133,31 +143,18 @@ const Navbar = () => {
           <Message sx={{ fontSize: "25px" }} />
           <Notifications sx={{ fontSize: "25px" }} />
           <Help sx={{ fontSize: "25px" }} />
-          <FormControl variant="standard" value={fullName}>
-            <Select
-              value={fullName}
-              sx={{
-                backgroundColor: neutralLight,
-                width: "150px",
-                borderRadius: "0.25rem",
-                p: "0.25rem 1rem",
-                "& .MuiSvgIcon-root": {
-                  pr: "0.25rem",
-                  width: "3rem",
-                },
-                "& .MuiSelect-select:focus": {
-                  backgroundColor: neutralLight,
-                },
-              }}
-              input={<InputBase />}
-            >
-              <MenuItem value={fullName}>
-                <Typography>{fullName}</Typography>
-              </MenuItem>
-              <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
-            </Select>
-          </FormControl>
-          <ProfileIcon src={`${process.env.REACT_APP_IP}/assets/${picturePath}`}/>
+          <ProfileIcon onMouseEnter={handleDropdownVisibility} onMouseLeave={handleDropdownVisibility} src={`${process.env.REACT_APP_IP}/assets/${picturePath}`}/>
+          
+          {profileIconDropdownVisibility && <ProfileDropdown style={{
+            backgroundColor: background,
+          }} animate={profileIconDropdownHovered}>
+                <MenuItem value={fullName} onClick={()=> navigate(`/profile/${user._id}`) }>
+                  <Typography>{fullName}</Typography>
+                </MenuItem>
+                <MenuItem onClick={() => dispatch(setLogout())}>
+                  Log Out
+                </MenuItem>
+            </ProfileDropdown>}
 
         </FlexBetween>
       ) : (
@@ -210,36 +207,18 @@ const Navbar = () => {
             {/*<Message sx={{ fontSize: "25px" }} />
             <Notifications sx={{ fontSize: "25px" }} />
             <Help sx={{ fontSize: "25px" }} /> */}
-            <FormControl variant="standard" value={fullName}>
-              <Select
-                value={fullName}
-                sx={{
-                  backgroundColor: neutralLight,
-                  width: "150px",
-                  borderRadius: "0.25rem",
-                  p: "0.25rem 1rem",
-                  "& .MuiSvgIcon-root": {
-                    pr: "0.25rem",
-                    width: "3rem",
-                  },
-                  "& .MuiSelect-select:focus": {
-                    backgroundColor: neutralLight,
-                  },
-                }}
-                input={<InputBase />}
-              >
+            
+            
+            <ProfileIcon onMouseEnter={handleDropdownVisibility} onMouseLeave={handleDropdownVisibility} src={`${process.env.REACT_APP_IP}/assets/${picturePath}`} size="30px" alt="Error"/>
+            
+            {profileIconDropdownVisibility && <ProfileDropdown animate={profileIconDropdownHovered}>
                 <MenuItem value={fullName}>
                   <Typography>{fullName}</Typography>
                 </MenuItem>
                 <MenuItem onClick={() => dispatch(setLogout())}>
                   Log Out
                 </MenuItem>
-              </Select>
-            </FormControl>
-            
-            <ProfileIcon src={`${process.env.REACT_APP_IP}/assets/${picturePath}`} size="30px" alt="Error"/>
-            
-
+            </ProfileDropdown>}
           </FlexBetween>
         </Box>
       )}
@@ -253,6 +232,32 @@ const ProfileIcon = styled.img`
   height: 60px;
   cursor:pointer;
   object-fit: cover;
+`;
+
+const fadeOut= keyframes`
+  from{
+    opacity: 1;
+  }to{
+    opacity: 0;
+  }
+`;
+
+const fadeIn = keyframes`
+  from{
+    opacity:0;
+  }to{
+    opacity:1;
+  }
+`;
+
+const ProfileDropdown = styled.div`
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 80px;
+  right: 90px;
+  animation: ${props => props.animate?fadeIn:fadeOut} 0.25s linear forwards;
+  border-radius: 5px;
 `;
 
 export default Navbar;
