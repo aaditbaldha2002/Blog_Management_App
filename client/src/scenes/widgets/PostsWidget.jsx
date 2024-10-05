@@ -91,7 +91,7 @@ const PostsWidget = ({ userId, isProfile = false, isAdminSide }) => {
       }
     );
     const data = await response.json();
-
+    
     if (data.length == 0) setHasMorePosts(false);
     dispatch({
       type: "SET_POSTS",
@@ -113,6 +113,7 @@ const PostsWidget = ({ userId, isProfile = false, isAdminSide }) => {
           userPicturePath,
           likes,
           comments,
+          createdAt          
         }) => (
           <PostWidget
             key={_id}
@@ -125,6 +126,7 @@ const PostsWidget = ({ userId, isProfile = false, isAdminSide }) => {
             userPicturePath={userPicturePath}
             likes={likes}
             comments={comments}
+            createdAt = {createdAt}
             isProfile={isProfile}
             isAdminPost={isAdminSide}
           />
