@@ -62,7 +62,15 @@ const MyPostWidget = ({ picturePath }) => {
 
   return (
     <WidgetWrapper>
-      <WidgetTitle>Post Something</WidgetTitle>
+            <Typography
+        color={palette.neutral.dark}
+        variant="h5"
+        fontWeight="500"
+        sx={{ mb: "1.5rem" }}
+      >
+        Post Something
+      </Typography>
+
       <FlexBetween gap="1.5rem">
         <UserImage image={picturePath} />
         <InputBase
@@ -159,20 +167,16 @@ const MyPostWidget = ({ picturePath }) => {
         )}
 
         <Button
-          disabled={!post}
+          disabled={!post && !image}
           onClick={handlePost}
           sx={{
             color: palette.background.alt,
             backgroundColor: palette.primary.main,
-            borderRadius: "3rem",
+            borderRadius: "0.25rem",
           }}
         >
           POST
         </Button>
-
-        <PostBtn disabled={!post} onClick={handlePost}>
-          POST
-        </PostBtn>
 
       </FlexBetween>
     </WidgetWrapper>
@@ -180,16 +184,3 @@ const MyPostWidget = ({ picturePath }) => {
 };
 
 export default MyPostWidget;
-
-const WidgetTitle = styled.div`
-  font-family: 'Rubik', sans-serif;
-  font-size: 20px;
-  color: ${themeSettings().palette.background.default};
-  margin-bottom: 1rem;
-`;
-
-const PostBtn = styled(Button)`
-  color: ${themeSettings().palette.background.alt};
-  background-color: ${themeSettings().palette.primary.dark};
-  border-radius: "3rem";
-`;

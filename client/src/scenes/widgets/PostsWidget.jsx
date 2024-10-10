@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state/index";
 import PostWidget from "./PostWidget";
+import styled from "styled-components";
 
 
 const PostsWidget = ({ userId, isProfile = false, isAdminSide }) => {
@@ -40,7 +41,7 @@ const PostsWidget = ({ userId, isProfile = false, isAdminSide }) => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <>
+    <ColumnWrapper>
       {
         posts.map(
           ({
@@ -71,8 +72,12 @@ const PostsWidget = ({ userId, isProfile = false, isAdminSide }) => {
             />
           )
         )} 
-    </>
+    </ColumnWrapper>
   );
 };
 
+const ColumnWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 export default PostsWidget;

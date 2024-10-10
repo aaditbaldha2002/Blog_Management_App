@@ -100,7 +100,10 @@ const analysePost=async()=>{
   return (
     <FlexBetween>
       <FlexBetween gap="1rem">
-        <UserImage image={userPicturePath} size="55px" />
+        <UserImage image={userPicturePath} size="55px" onClick={()=>{
+          navigate(`/profile/${friendId}`);
+          navigate(0);
+        }}/>
         <Box
           onClick={() => {
             navigate(`/profile/${friendId}`);
@@ -113,7 +116,7 @@ const analysePost=async()=>{
             fontWeight="500"
             sx={{
               "&:hover": {
-                color: palette.primary.light,
+                color: palette.primary.main,
                 cursor: "pointer",
               },
             }}

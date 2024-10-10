@@ -24,22 +24,24 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state/index";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
-import {styled,keyframes} from "styled-components";
+import { styled, keyframes } from "styled-components";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
-  const [search, setsearch] = useState("");
-  const [profileIconDropdownVisibility, setProfileIconDropdownVisibility] = useState(false);
-  const [profileIconDropdownHovered, setProfileIconDropdownHovered] = useState(false);
+  const [search, setSearch] = useState("");
+  const [profileIconDropdownVisibility, setProfileIconDropdownVisibility] =
+    useState(false);
+  const [profileIconDropdownHovered, setProfileIconDropdownHovered] =
+    useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const posts = useSelector((state) => state.posts);
   const user = useSelector((state) => state.user);
   const picturePath = user.picturePath;
   const token = useSelector((state) => state.token);
-  const whichSide=useSelector((state)=>state.side);
-  const navbardisplay= useMediaQuery("(min-width: 200px");
-  
+  const whichSide = useSelector((state) => state.side);
+  const navbardisplay = useMediaQuery("(min-width: 200px");
+
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 
   const theme = useTheme();
@@ -51,36 +53,36 @@ const Navbar = () => {
   const fullName = `${user.firstName} ${user.lastName}`;
 
   const searchbox = async () => {
-    if (search !=="" && search!==" ") {
-      const response = await fetch(`${process.env.REACT_APP_IP}/posts/${search}`, {
+    if (search !== "" && search !== " ") {
+      const response = await fetch(
+        `${process.env.REACT_APP_IP}/posts/${search}`,
+        {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      const data = await response.json();
+      dispatch(setPosts({ posts: data }));
+      console.log(posts);
+    } else {
+      const response = await fetch(`${process.env.REACT_APP_IP}/posts`, {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
       dispatch(setPosts({ posts: data }));
-      console.log(posts)
-    }
-
-    else
-    {
-      const response=await fetch(`${process.env.REACT_APP_IP}/posts`,{
-        method:"GET",
-        headers:{Authorization:`Bearer ${token}`},
-      });
-      const data=await response.json();
-      dispatch(setPosts({posts:data}));
       console.log(posts);
     }
   };
 
-  const handleDropdownVisibility= ()=>{
-    let currentHoveredState=profileIconDropdownHovered;
-    if(currentHoveredState===true){
+  const handleDropdownVisibility = () => {
+    let currentHoveredState = profileIconDropdownHovered;
+    if (currentHoveredState === true) {
       setProfileIconDropdownHovered(false);
-      setTimeout(()=>{
+      setTimeout(() => {
         setProfileIconDropdownVisibility(false);
-      },250);
-    }else{
+      }, 250);
+    } else {
       setProfileIconDropdownHovered(true);
       setProfileIconDropdownVisibility(true);
     }
@@ -95,18 +97,48 @@ const Navbar = () => {
           // color="primary"
           onClick={() => {
             console.log(whichSide);
-            if(whichSide==="admin")
-            {
+            if (whichSide === "admin") {
               navigate("/admin");
-            }
-            else
-              navigate("/home");
+            } else navigate("/home");
           }}
           sx={{
             "&:hover": {
-              // color: primaryLight,
               cursor: "pointer",
+              background: `linear-gradient(to right, ${theme.palette.neutral.dark} 50%, ${theme.palette.primary.main} 50%)`, // Color transition from white to cyan
+              backgroundClip: "text",
+              WebkitBackgroundClip: "text",
+              color: "transparent",
+              animation: "color-transition 0.35s forwards",
+              backgroundSize: "200% 100%",
             },
+
+            "&:not(:hover)": {
+              background: `linear-gradient(to left, ${theme.palette.neutral.dark} 50%, ${theme.palette.primary.main} 50%)`, // Color transition from white to cyan
+              backgroundClip: "text",
+              WebkitBackgroundClip: "text",
+              color: "transparent",
+              animation: "color-reverse-transition 0.35s forwards",
+              backgroundSize: "200% 100%",
+            },
+
+            "@keyframes color-transition": {
+              "0%": {
+                backgroundPosition: "0% 0%",
+              },
+              "100%": {
+                backgroundPosition: "-100% 0%",
+              },
+            },
+
+            "@keyframes color-reverse-transition": {
+              "0%": {
+                backgroundPosition: "0% 0%",
+              },
+              "100%": {
+                backgroundPosition: "100% 0%",
+              },
+            },
+
           }}
         >
           Blog Management
@@ -116,11 +148,11 @@ const Navbar = () => {
             backgroundColor={neutralLight}
             borderRadius="9px"
             gap="3rem"
-            padding="0.1rem 1.5rem"
+            padding="0.25rem 0.5rem 0.25rem 1rem"
           >
             <InputBase
               placeholder="Search..."
-              onChange={(e) => setsearch(e.target.value)}
+              onChange={(e) => setSearch(e.target.value)}
               value={search}
             />
             <IconButton onClick={searchbox}>
@@ -143,19 +175,28 @@ const Navbar = () => {
           <Message sx={{ fontSize: "25px" }} />
           <Notifications sx={{ fontSize: "25px" }} />
           <Help sx={{ fontSize: "25px" }} />
-          <ProfileIcon onMouseEnter={handleDropdownVisibility} onMouseLeave={handleDropdownVisibility} src={`${process.env.REACT_APP_IP}/assets/${picturePath}`}/>
-          
-          {profileIconDropdownVisibility && <ProfileDropdown style={{
-            backgroundColor: background,
-          }} animate={profileIconDropdownHovered}>
-                <MenuItem value={fullName} onClick={()=> navigate(`/profile/${user._id}`) }>
-                  <Typography>{fullName}</Typography>
-                </MenuItem>
-                <MenuItem onClick={() => dispatch(setLogout())}>
-                  Log Out
-                </MenuItem>
-            </ProfileDropdown>}
+          <ProfileIcon
+            onMouseEnter={handleDropdownVisibility}
+            onMouseLeave={handleDropdownVisibility}
+            src={`${process.env.REACT_APP_IP}/assets/${picturePath}`}
+          />
 
+          {profileIconDropdownVisibility && (
+            <ProfileDropdown
+              style={{
+                backgroundColor: background,
+              }}
+              animate={profileIconDropdownHovered}
+            >
+              <MenuItem
+                value={fullName}
+                onClick={() => navigate(`/profile/${user._id}`)}
+              >
+                <Typography>{fullName}</Typography>
+              </MenuItem>
+              <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
+            </ProfileDropdown>
+          )}
         </FlexBetween>
       ) : (
         <IconButton
@@ -207,18 +248,25 @@ const Navbar = () => {
             {/*<Message sx={{ fontSize: "25px" }} />
             <Notifications sx={{ fontSize: "25px" }} />
             <Help sx={{ fontSize: "25px" }} /> */}
-            
-            
-            <ProfileIcon onMouseEnter={handleDropdownVisibility} onMouseLeave={handleDropdownVisibility} src={`${process.env.REACT_APP_IP}/assets/${picturePath}`} size="30px" alt="Error"/>
-            
-            {profileIconDropdownVisibility && <ProfileDropdown animate={profileIconDropdownHovered}>
+
+            <ProfileIcon
+              onMouseEnter={handleDropdownVisibility}
+              onMouseLeave={handleDropdownVisibility}
+              src={`${process.env.REACT_APP_IP}/assets/${picturePath}`}
+              size="30px"
+              alt="Error"
+            />
+
+            {profileIconDropdownVisibility && (
+              <ProfileDropdown animate={profileIconDropdownHovered}>
                 <MenuItem value={fullName}>
                   <Typography>{fullName}</Typography>
                 </MenuItem>
                 <MenuItem onClick={() => dispatch(setLogout())}>
                   Log Out
                 </MenuItem>
-            </ProfileDropdown>}
+              </ProfileDropdown>
+            )}
           </FlexBetween>
         </Box>
       )}
@@ -227,14 +275,14 @@ const Navbar = () => {
 };
 
 const ProfileIcon = styled.img`
-  border-radius:50%;
+  border-radius: 50%;
   width: 60px;
   height: 60px;
-  cursor:pointer;
+  cursor: pointer;
   object-fit: cover;
 `;
 
-const fadeOut= keyframes`
+const fadeOut = keyframes`
   from{
     opacity: 1;
   }to{
@@ -256,7 +304,8 @@ const ProfileDropdown = styled.div`
   position: absolute;
   top: 80px;
   right: 90px;
-  animation: ${props => props.animate?fadeIn:fadeOut} 0.25s linear forwards;
+  animation: ${(props) => (props.animate ? fadeIn : fadeOut)} 0.25s linear
+    forwards;
   border-radius: 5px;
 `;
 
