@@ -23,16 +23,18 @@ import FlexBetween from "components/FlexBetween";
 import Dropzone from "react-dropzone";
 import UserImage from "components/UserImage";
 import WidgetWrapper from "components/WidgetWrapper";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state/index";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { themeSettings } from "theme";
+
 const MyPostWidget = ({ picturePath }) => {
   const dispatch = useDispatch();
   const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState(null);
   const [post, setPost] = useState("");
+  const [pageLoaded, setPageLoaded] = useState(false);
   const { palette } = useTheme();
   const { _id } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
@@ -60,9 +62,13 @@ const MyPostWidget = ({ picturePath }) => {
     setPost("");
   };
 
+  useEffect(()=>{
+    setPageLoaded(true);
+  },[]);
+
   return (
     <WidgetWrapper>
-            <Typography
+      <Typography
         color={palette.neutral.dark}
         variant="h5"
         fontWeight="500"
@@ -166,21 +172,45 @@ const MyPostWidget = ({ picturePath }) => {
           </FlexBetween>
         )}
 
-        <Button
-          disabled={!post && !image}
-          onClick={handlePost}
-          sx={{
-            color: palette.background.alt,
-            backgroundColor: palette.primary.main,
-            borderRadius: "0.25rem",
-          }}
-        >
+        <PostBtn onClick={handlePost} visible={!(!post && !image)} pageLoaded={pageLoaded}>
           POST
-        </Button>
-
+        </PostBtn>
       </FlexBetween>
     </WidgetWrapper>
   );
 };
+
+const fadeIn = keyframes`
+  from{
+    opacity: 0;
+  } to{
+    opacity: 1;
+  } 
+`;
+
+const fadeOut =(props)=>keyframes`
+  from{
+    opacity: ${props.pageLoaded ? 1 : 0};
+  } to{
+    opacity: 0;
+  } 
+`;
+
+const PostBtn = styled.button`
+  cursor: pointer;
+  color: ${themeSettings().palette.background.alt};
+  background-color: ${themeSettings().palette.primary.main};
+  border-radius: 0.25rem;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-family: ${themeSettings().typography.fontFamily};
+  animation: ${(props) => (props.visible ? fadeIn : fadeOut(props.pageLoaded))} 0.35s ease-in-out
+    forwards;
+
+  &:hover {
+    background-color: ${themeSettings().palette.primary.dark};
+    color: ${themeSettings().palette.background.alt};
+  }
+`;
 
 export default MyPostWidget;

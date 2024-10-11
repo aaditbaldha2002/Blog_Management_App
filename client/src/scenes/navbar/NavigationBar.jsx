@@ -29,10 +29,8 @@ import { styled, keyframes } from "styled-components";
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
   const [search, setSearch] = useState("");
-  const [profileIconDropdownVisibility, setProfileIconDropdownVisibility] =
-    useState(false);
-  const [profileIconDropdownHovered, setProfileIconDropdownHovered] =
-    useState(false);
+  const [iconDropdownVisibility, setIconDropdownVisibility] = useState(false);
+  const [profileIconDropdownHovered, setIconDropdownHovered] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const posts = useSelector((state) => state.posts);
@@ -78,13 +76,13 @@ const Navbar = () => {
   const handleDropdownVisibility = () => {
     let currentHoveredState = profileIconDropdownHovered;
     if (currentHoveredState === true) {
-      setProfileIconDropdownHovered(false);
+      setIconDropdownHovered(false);
       setTimeout(() => {
-        setProfileIconDropdownVisibility(false);
+        setIconDropdownVisibility(false);
       }, 250);
     } else {
-      setProfileIconDropdownHovered(true);
-      setProfileIconDropdownVisibility(true);
+      setIconDropdownHovered(true);
+      setIconDropdownVisibility(true);
     }
   };
 
@@ -138,7 +136,6 @@ const Navbar = () => {
                 backgroundPosition: "100% 0%",
               },
             },
-
           }}
         >
           Blog Management
@@ -181,7 +178,7 @@ const Navbar = () => {
             src={`${process.env.REACT_APP_IP}/assets/${picturePath}`}
           />
 
-          {profileIconDropdownVisibility && (
+          {iconDropdownVisibility && (
             <ProfileDropdown
               style={{
                 backgroundColor: background,
@@ -190,11 +187,27 @@ const Navbar = () => {
             >
               <MenuItem
                 value={fullName}
+                onMouseEnter={() => {
+                  setIconDropdownHovered(true);
+                }}
+                onMouseLeave={() => {
+                  setIconDropdownHovered(false);
+                }}
                 onClick={() => navigate(`/profile/${user._id}`)}
               >
                 <Typography>{fullName}</Typography>
               </MenuItem>
-              <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
+              <MenuItem
+                onClick={() => dispatch(setLogout())}
+                onMouseEnter={() => {
+                  setIconDropdownHovered(true);
+                }}
+                onMouseLeave={() => {
+                  setIconDropdownHovered(false);
+                }}
+              >
+                Log Out
+              </MenuItem>
             </ProfileDropdown>
           )}
         </FlexBetween>
@@ -257,12 +270,29 @@ const Navbar = () => {
               alt="Error"
             />
 
-            {profileIconDropdownVisibility && (
+            {iconDropdownVisibility && (
               <ProfileDropdown animate={profileIconDropdownHovered}>
-                <MenuItem value={fullName}>
+                <MenuItem
+                  value={fullName}
+                  onMouseEnter={() => {
+                    setIconDropdownHovered(true);
+                  }}
+                  onMouseLeave={() => {
+                    setIconDropdownHovered(false);
+                  }}
+                  onClick={() => navigate(`/profile/${user._id}`)}
+                >
                   <Typography>{fullName}</Typography>
                 </MenuItem>
-                <MenuItem onClick={() => dispatch(setLogout())}>
+                <MenuItem
+                  onClick={() => dispatch(setLogout())}
+                  onMouseEnter={() => {
+                    setIconDropdownHovered(true);
+                  }}
+                  onMouseLeave={() => {
+                    setIconDropdownHovered(false);
+                  }}
+                >
                   Log Out
                 </MenuItem>
               </ProfileDropdown>
