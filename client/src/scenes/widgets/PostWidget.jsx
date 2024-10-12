@@ -27,6 +27,7 @@ const PostWidget = ({
   userPicturePath,
   likes,
   comments,
+  createdAt,
   isProfile,
   isAdminPost,
 }) => {
@@ -44,8 +45,7 @@ const PostWidget = ({
 
   const { palette } = useTheme();
   const main = palette.neutral.main;
-  const primary = palette.primary.main;
-
+  const primary = palette.primary.main; 
   
 
   const patchLike = async () => {
@@ -106,6 +106,7 @@ const PostWidget = ({
         friendId={postUserId}
         name={name}
         subtitle={location}
+        createdAt={createdAt}
         userPicturePath={userPicturePath}
         isProfile={isProfile}
         isAdminSide={isAdminPost}
@@ -227,55 +228,6 @@ const PostWidget = ({
                 </Typography>
               </FlexBetween>
             </Box>
-            // <FlexBetween>
-            //     <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
-            //       {comment.comment}
-            //     </Typography>
-            // </FlexBetween>
-
-
-            // <Box  sx={{ justifyContent: 'flex-start' }}>
-            //   {/* <Divider /> */}
-
-
-            //   <FlexBetween gap="1rem">
-            //     <UserImage
-            //       image={comment.picturePath}
-            //       size={"40px"} />
-
-
-            //     <Box
-            //       onClick={() => {
-            //         navigate(`/profile/${comment.commentBy}`);
-            //         navigate(0);
-            //       }}
-            //     >
-            // <Typography
-            //   color={main}
-            //   variant="h5"
-            //   fontWeight="100"
-            //   sx={{
-            //     "&:hover": {
-            //       color: palette.primary.light,
-            //       cursor: "pointer",
-            //     },
-            //   }}
-            // >
-            //   {comment.fullname}
-            // </Typography>
-
-            //     </Box>
-            //   </FlexBetween>
-
-            //   {/* <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
-            //     {comment.fullname}
-            //   </Typography> */}
-
-
-            //   <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
-            //     {comment.comment}
-            //   </Typography>
-            // </Box>
           ))}
 
         </Box>
