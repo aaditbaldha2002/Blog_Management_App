@@ -6,8 +6,8 @@ const router = express.Router();
 
 /* READ */
 router.get("/", verifyToken, getFeedPosts);
-router.get("/:searchquery", verifyToken, getSearchedPosts);
-router.get("/:userId/posts", verifyToken, getUserPosts);
+router.get("/search/:searchquery", verifyToken, getSearchedPosts);
+router.get("/user/:userId", verifyToken, getUserPosts);
 router.get("/:postId",verifyToken,getUserPost);
 // router.get("/:id/showcomments",verifyToken,getPostComments);
 

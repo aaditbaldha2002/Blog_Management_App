@@ -89,9 +89,7 @@ const Form = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
-      console.log(loggedInResponse);
       const loggedIn = await loggedInResponse.json();
-      // console.log(loggedIn);
       onSubmitProps.resetForm();
       if (loggedIn) {
         dispatch(

@@ -12,9 +12,10 @@ import UserImage from "components/UserImage";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setPost } from "state/index";
+import { useSelector } from "react-redux";
+import { updatePost } from "state/index";
 import { useNavigate } from "react-router-dom";
+import { usePosts } from "../../context";
 
 const PostWidget = ({
   postId,
@@ -26,12 +27,13 @@ const PostWidget = ({
   userPicturePath,
   likes,
   comments,
+  createdAt,
   isProfile,
   isAdminPost,
 }) => {
   const [showComments, ToggleComments] = useState(false);
   const [comment, setComment] = useState("");
-  const dispatch = useDispatch();
+  const { dispatch } = usePosts();
   const token = useSelector((state) => state.token);
   const loggedInUserId = useSelector((state) => state.user._id);
   const isLiked = Boolean(likes[loggedInUserId]);
@@ -43,12 +45,10 @@ const PostWidget = ({
 
   const { palette } = useTheme();
   const main = palette.neutral.main;
-  const primary = palette.primary.main;
-
+  const primary = palette.primary.main; 
   
 
   const patchLike = async () => {
-    // console.log("HEYO");
     const response = await fetch(`${process.env.REACT_APP_IP}/posts/${postId}/like`, {
       method: "PATCH",
       headers: {
@@ -58,17 +58,16 @@ const PostWidget = ({
       body: JSON.stringify({ userId: loggedInUserId }),
     });
     const updatedPost = await response.json();
-    dispatch(setPost({ post: updatedPost }));
+    dispatch({
+      type: "UPDATE_POST",
+      payload: (updatedPost),
+    });
   };
 
   const displayComment = async () => {
 
     ToggleComments(!showComments)
-
-
-
-
-    // dispatch(setFriends({ friends: data }));
+   // dispatch(setFriends({ friends: data }));
 
   }
   const patchComment = async () => {
@@ -79,8 +78,6 @@ const PostWidget = ({
       fullname: fullName,
       picturePath: commentpicturePath,
     };
-    console.log(JSON.stringify(requestbody))
-
     // ToggleComments(!showComments);
     const response = await fetch(`${process.env.REACT_APP_IP}/posts/${postId}/comment`, {
       method: "PATCH",
@@ -91,7 +88,10 @@ const PostWidget = ({
       body: JSON.stringify(requestbody),
     });
     const updatedPost = await response.json();
-    dispatch(setPost({ post: updatedPost }));
+    dispatch({
+      type: "UPDATE_POST",
+      payload: (updatedPost),
+    });
     setComment("");
   };
 
@@ -106,6 +106,7 @@ const PostWidget = ({
         friendId={postUserId}
         name={name}
         subtitle={location}
+        createdAt={createdAt}
         userPicturePath={userPicturePath}
         isProfile={isProfile}
         isAdminSide={isAdminPost}
@@ -227,55 +228,6 @@ const PostWidget = ({
                 </Typography>
               </FlexBetween>
             </Box>
-            // <FlexBetween>
-            //     <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
-            //       {comment.comment}
-            //     </Typography>
-            // </FlexBetween>
-
-
-            // <Box  sx={{ justifyContent: 'flex-start' }}>
-            //   {/* <Divider /> */}
-
-
-            //   <FlexBetween gap="1rem">
-            //     <UserImage
-            //       image={comment.picturePath}
-            //       size={"40px"} />
-
-
-            //     <Box
-            //       onClick={() => {
-            //         navigate(`/profile/${comment.commentBy}`);
-            //         navigate(0);
-            //       }}
-            //     >
-            // <Typography
-            //   color={main}
-            //   variant="h5"
-            //   fontWeight="100"
-            //   sx={{
-            //     "&:hover": {
-            //       color: palette.primary.light,
-            //       cursor: "pointer",
-            //     },
-            //   }}
-            // >
-            //   {comment.fullname}
-            // </Typography>
-
-            //     </Box>
-            //   </FlexBetween>
-
-            //   {/* <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
-            //     {comment.fullname}
-            //   </Typography> */}
-
-
-            //   <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
-            //     {comment.comment}
-            //   </Typography>
-            // </Box>
           ))}
 
         </Box>

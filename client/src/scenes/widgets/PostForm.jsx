@@ -1,10 +1,7 @@
 import {
   EditOutlined,
   DeleteOutlined,
-  AttachFileOutlined,
-  GifBoxOutlined,
   ImageOutlined,
-  MicOutlined,
   MoreHorizOutlined,
 } from "@mui/icons-material";
 import {
@@ -13,10 +10,8 @@ import {
   Typography,
   InputBase,
   useTheme,
-  Button,
   IconButton,
   useMediaQuery,
-  ButtonBase,
 } from "@mui/material";
 
 import FlexBetween from "components/FlexBetween";
@@ -24,13 +19,13 @@ import Dropzone from "react-dropzone";
 import UserImage from "components/UserImage";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setPosts } from "state/index";
+import { useSelector } from "react-redux";
 import styled, { keyframes } from "styled-components";
 import { themeSettings } from "theme";
+import { usePosts } from "context";
 
 const MyPostWidget = ({ picturePath }) => {
-  const dispatch = useDispatch();
+  const { dispatch } = usePosts();
   const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState(null);
   const [post, setPost] = useState("");
@@ -56,8 +51,8 @@ const MyPostWidget = ({ picturePath }) => {
       headers: { Authorization: `Bearer ${token}` },
       body: formData,
     });
-    const posts = await response.json();
-    dispatch(setPosts({ posts }));
+    const newSavedPost = await response.json();
+    dispatch({ type: "ADD_POST", payload: newSavedPost });
     setImage(null);
     setPost("");
   };
@@ -151,20 +146,6 @@ const MyPostWidget = ({ picturePath }) => {
 
         {isNonMobileScreens ? (
           <>
-            {/* <FlexBetween gap="0.25rem">
-              <GifBoxOutlined sx={{ color: mediumMain }} />
-              <Typography color={mediumMain}>Clip</Typography>
-            </FlexBetween> */}
-
-            {/* <FlexBetween gap="0.25rem">
-              <AttachFileOutlined sx={{ color: mediumMain }} />
-              <Typography color={mediumMain}>Attachment</Typography>
-            </FlexBetween> */}
-
-            {/* <FlexBetween gap="0.25rem">
-              <MicOutlined sx={{ color: mediumMain }} />
-              <Typography color={mediumMain}>Audio</Typography>
-            </FlexBetween> */}
           </>
         ) : (
           <FlexBetween gap="0.25rem">

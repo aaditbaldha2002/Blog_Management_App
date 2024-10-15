@@ -5,8 +5,9 @@ FROM node:16
 WORKDIR /app
 
 # Copy package.json and install dependencies
-COPY package*.json ./
-RUN npm install
+COPY */*.json ./
+RUN npm install --legacy-peer-deps
+RUN npm audit fix
 
 # Copy the entire application
 COPY . .
