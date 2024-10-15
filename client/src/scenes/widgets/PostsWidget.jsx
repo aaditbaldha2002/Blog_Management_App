@@ -2,7 +2,8 @@ import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts, resetPosts } from "state/index";
 import PostWidget from "./PostWidget";
-import { usePosts } from "../../context";
+import { usePosts } from "../../context";import styled from "styled-components";
+
 
 const PostsWidget = ({ userId, isProfile = false, isAdminSide }) => {
   const { posts, dispatch } = usePosts();
@@ -63,13 +64,10 @@ const PostsWidget = ({ userId, isProfile = false, isAdminSide }) => {
   };
 
   const getPosts = async () => {
-    const response = await fetch(
-      `${process.env.REACT_APP_IP}/posts?page=${page}`,
-      {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    const response = await fetch(`${process.env.REACT_APP_IP}/posts`, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    });
     const data = await response.json();
 
     if (data.length == 0) {
@@ -84,56 +82,58 @@ const PostsWidget = ({ userId, isProfile = false, isAdminSide }) => {
   const getUserPosts = async () => {
     //do something with page
     const response = await fetch(
-      `${process.env.REACT_APP_IP}/posts/user/${userId}?page=${page}`,
+      `${process.env.REACT_APP_IP}/posts?page=${page}`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       }
     );
     const data = await response.json();
-    
-    if (data.length == 0) setHasMorePosts(false);
-    dispatch({
-      type: "SET_POSTS",
-      payload: (prevPosts) => [...prevPosts, ...data],
-    });
+    dispatch(setPosts({ posts: data }));
+    console.log(posts)
   };
 
+
   return (
-    <>
-      {posts.map(
-        ({
-          _id,
-          userId,
-          firstName,
-          lastName,
-          description,
-          location,
-          picturePath,
-          userPicturePath,
-          likes,
-          comments,
-          createdAt          
-        }) => (
-          <PostWidget
-            key={_id}
-            postId={_id}
-            postUserId={userId}
-            name={`${firstName} ${lastName}`}
-            description={description}
-            location={location}
-            picturePath={picturePath}
-            userPicturePath={userPicturePath}
-            likes={likes}
-            comments={comments}
-            createdAt = {createdAt}
-            isProfile={isProfile}
-            isAdminPost={isAdminSide}
-          />
-        )
-      )}
-    </>
+    <ColumnWrapper>
+      {
+        posts.map(
+          ({
+            _id,
+            userId,
+            firstName,
+            lastName,
+            description,
+            location,
+            picturePath,
+            userPicturePath,
+            likes,
+            comments,
+            createdAt
+          }) => (
+            <PostWidget
+              key={_id}
+              postId={_id}
+              postUserId={userId}
+              name={`${firstName} ${lastName}`}
+              description={description}
+              location={location}
+              picturePath={picturePath}
+              userPicturePath={userPicturePath}
+              likes={likes}
+              comments={comments}
+              createdAt = {createdAt}
+              isProfile={isProfile}
+              isAdminPost={isAdminSide}
+            />
+          )
+        )} 
+    </ColumnWrapper>
   );
 };
 
+const ColumnWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 export default PostsWidget;

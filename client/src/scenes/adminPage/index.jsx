@@ -1,7 +1,7 @@
 import { Box, Divider, Typography} from "@mui/material";
 import { margin } from "@mui/system";
 // import { useSelector } from "react-redux";
-import Navbar from "scenes/navbar";
+import Navbar from "scenes/navbar/NavigationBar";
 import { BoxWidget } from "scenes/widgets/BoxWidget";
 import { MainViewWidget } from "scenes/widgets/MainViewWidget";
 import PostsWidget from "scenes/widgets/PostsWidget";

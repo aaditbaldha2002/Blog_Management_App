@@ -82,7 +82,7 @@ const Form = () => {
 
   const login = async (values, onSubmitProps) => {
     
-    if(values.email=="admin@gmail.com" && values.password=="admin1234")
+    if(values.email==="admin@gmail.com" && values.password==="admin1234")
     {
       const loggedInResponse = await fetch(`${process.env.REACT_APP_IP}/auth/adminLogin`, {
         method: "POST",
